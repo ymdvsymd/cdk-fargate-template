@@ -3,10 +3,10 @@ import 'source-map-support/register';
 import * as cdk from '@aws-cdk/core';
 import { NetworkStack } from '../lib/network-stack';
 import { ComputeStack } from '../lib/compute-stack';
-
-const stackNamePrefix = process.env['SNPRE'];
+import '../lib/string';
 
 const app = new cdk.App();
+const stackNamePrefix = (<string>app.node.tryGetContext("name")).upperCamelCase() + (<string>app.node.tryGetContext("env")).upperCamelCase();
 const network = new NetworkStack(app, `${stackNamePrefix}Network`, {
   /* If you don't specify 'env', this stack will be environment-agnostic.
    * Account/Region-dependent features and context lookups will not work,

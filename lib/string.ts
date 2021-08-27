@@ -1,14 +1,14 @@
-export {};
+export { };
 
 declare global {
-    interface StringConstructor {
-      upperCamelCase(value: string): string;
-    }
+  interface String {
+    upperCamelCase(): string;
+  }
 }
-String.upperCamelCase  = upperCamelCase;
+String.prototype.upperCamelCase = upperCamelCase;
 
-function upperCamelCase(str: string) {
-  return capitalize(camelCase(str));
+function upperCamelCase(this: string) {
+  return capitalize(camelCase(this));
 }
 
 function camelCase(str: string) {
