@@ -1,10 +1,13 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 import * as cdk from '@aws-cdk/core';
-import { CdkFargateTemplateStack } from '../lib/cdk-fargate-template-stack';
+import { NetworkStack } from '../lib/network-stack';
+import { ComputeStack } from '../lib/compute-stack';
+
+const stackNamePrefix = process.env['SNPRE'];
 
 const app = new cdk.App();
-new CdkFargateTemplateStack(app, 'FargateStudyStack', {
+const network = new NetworkStack(app, `${stackNamePrefix}Network`, {
   /* If you don't specify 'env', this stack will be environment-agnostic.
    * Account/Region-dependent features and context lookups will not work,
    * but a single synthesized template can be deployed anywhere. */
@@ -19,3 +22,4 @@ new CdkFargateTemplateStack(app, 'FargateStudyStack', {
 
   /* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
 });
+new ComputeStack(app, `${stackNamePrefix}Compute`, { vpc: network.vpc });

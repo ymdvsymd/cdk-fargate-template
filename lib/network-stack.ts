@@ -1,56 +1,51 @@
 import * as cdk from '@aws-cdk/core';
-import { Vpc, SubnetType, SecurityGroup, Peer, Port, InterfaceVpcEndpointAwsService, GatewayVpcEndpointAwsService } from '@aws-cdk/aws-ec2'
+import { Vpc, SubnetType, SecurityGroup, Peer, Port, InterfaceVpcEndpointAwsService, GatewayVpcEndpointAwsService } from '@aws-cdk/aws-ec2';
 
-export class CdkFargateTemplateStack extends cdk.Stack {
+export class NetworkStack extends cdk.Stack {
+  vpc: Vpc;
+
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    const vpc = new Vpc(this, 'Vpc', {
+    this.vpc = new Vpc(this, 'Vpc', {
       cidr: '10.1.0.0/16',
       natGateways: 0,
       subnetConfiguration: [
         {
           cidrMask: 24,
           name: 'Public',
-          subnetType: SubnetType.PUBLIC,
+          subnetType: SubnetType.PUBLIC
         },
         {
           cidrMask: 24,
           name: 'Isolated',
-          subnetType: SubnetType.ISOLATED,
-        },
+          subnetType: SubnetType.ISOLATED
+        }
       ]
     });
 
-    const interfaceEndpointSecurityGroup = new SecurityGroup(
-      this,
-      "InterfaceEndpointSecurityGroup",
-      {
-        securityGroupName: "InterfaceEndpointSecurityGroup",
-        vpc: vpc
-      }
-    );
+    const interfaceEndpointSecurityGroup = new SecurityGroup(this, "InterfaceEndpointSecurityGroup", { vpc: this.vpc });
     interfaceEndpointSecurityGroup.addIngressRule(
-      Peer.ipv4(vpc.vpcCidrBlock),
+      Peer.ipv4(this.vpc.vpcCidrBlock),
       Port.tcp(443)
     );
-    vpc.addInterfaceEndpoint('EcrEndpoint', {
+    this.vpc.addInterfaceEndpoint('EcrEndpoint', {
       securityGroups: [interfaceEndpointSecurityGroup],
       service: InterfaceVpcEndpointAwsService.ECR
     });
-    vpc.addInterfaceEndpoint('EcrDockerEndpoint', {
+    this.vpc.addInterfaceEndpoint('EcrDockerEndpoint', {
       securityGroups: [interfaceEndpointSecurityGroup],
       service: InterfaceVpcEndpointAwsService.ECR_DOCKER
     });
-    vpc.addInterfaceEndpoint('LogsEndpoint', {
+    this.vpc.addInterfaceEndpoint('LogsEndpoint', {
       securityGroups: [interfaceEndpointSecurityGroup],
       service: InterfaceVpcEndpointAwsService.CLOUDWATCH_LOGS
     });
-    vpc.addGatewayEndpoint('S3Endpoint', {
+    this.vpc.addGatewayEndpoint('S3Endpoint', {
       service: GatewayVpcEndpointAwsService.S3,
       subnets: [
         {
-          subnets: vpc.isolatedSubnets
+          subnets: this.vpc.isolatedSubnets
         }
       ]
     });
