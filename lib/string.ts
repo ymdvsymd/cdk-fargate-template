@@ -2,14 +2,19 @@ export { };
 
 declare global {
   interface String {
+    camelCase(): string;
     upperCamelCase(): string;
   }
 }
-String.prototype.upperCamelCase = upperCamelCase;
 
-function upperCamelCase(this: string) {
-  return capitalize(camelCase(this));
-}
+String.prototype.camelCase = function (this: string) {
+  return camelCase(this);
+};
+
+String.prototype.upperCamelCase = function (this: string) {
+  const str = camelCase(this);
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
 
 function camelCase(str: string) {
   const wordSeparatorsRegEx = /[\s\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,\-.\/:;<=>?@\[\]^_`{|}~]+/;
@@ -43,11 +48,4 @@ function deCap(match: string, endOfWord: boolean) {
   const first = arr.shift()!.toUpperCase();
   const last = endOfWord ? arr.pop()!.toLowerCase() : arr.pop();
   return first + arr.join('').toLowerCase() + last;
-}
-
-function capitalize(str: string) {
-  if (typeof str != 'string') {
-    throw Error('just-capitalize expects a string argument');
-  }
-  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
