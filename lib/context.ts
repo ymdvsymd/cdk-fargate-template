@@ -4,10 +4,6 @@ export class Context {
   constructor(private self: { tryGetContext: (key: string) => any }) {
   }
 
-  get stackNamePrefix(): string {
-    return this.name.upperCamelCase() + this.env.upperCamelCase();
-  }
-
   get name(): string {
     return this.self.tryGetContext('name');
   }
@@ -21,6 +17,14 @@ export class Context {
   }
 
   get imageRepo(): string {
-    return this.self.tryGetContext('domain');
+    return this.self.tryGetContext('imageRepo');
+  }
+
+  get stackPrefix(): string {
+    return this.name.upperCamelCase() + this.env.upperCamelCase();
+  }
+
+  get subDomain(): string {
+    return `${this.name}.${this.domain}`;
   }
 }
