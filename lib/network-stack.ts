@@ -1,5 +1,6 @@
 import * as cdk from '@aws-cdk/core';
 import * as ec2 from '@aws-cdk/aws-ec2';
+import { Context } from './context'
 
 export class NetworkStack extends cdk.Stack {
   vpc: ec2.Vpc;
@@ -24,7 +25,7 @@ export class NetworkStack extends cdk.Stack {
       ]
     });
 
-    const interfaceEndpointSecurityGroup = new ec2.SecurityGroup(this, "InterfaceEndpointSecurityGroup", { vpc: this.vpc });
+    const interfaceEndpointSecurityGroup = new ec2.SecurityGroup(this, 'InterfaceEndpointSecurityGroup', { vpc: this.vpc });
     interfaceEndpointSecurityGroup.addIngressRule(
       ec2.Peer.ipv4(this.vpc.vpcCidrBlock),
       ec2.Port.tcp(443)

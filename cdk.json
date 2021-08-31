@@ -18,6 +18,7 @@
 
     "name": "cft",
     "env": "stg",
+    "domain": "",
     "imageRepo": "amazon/amazon-ecs-sample"
   }
 }
