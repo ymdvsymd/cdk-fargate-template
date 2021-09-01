@@ -16,7 +16,7 @@
     "@aws-cdk/aws-lambda:recognizeVersionProps": true,
     "@aws-cdk/aws-cloudfront:defaultSecurityPolicyTLSv1.2_2021": true,
 
-    "name": "cft",
+    "appName": "ymd",
     "env": "stg",
     "domain": "ymdvsymd.com",
     "imageRepo": "amazon/amazon-ecs-sample"

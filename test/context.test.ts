@@ -3,7 +3,7 @@ import { Context } from '../lib/context'
 
 const app = new cdk.App({
   context: {
-    'name': 'study',
+    'appName': 'app',
     'env': 'test',
     'domain': 'foobar.com',
     'imageRepo': 'foo/bar'
@@ -12,5 +12,5 @@ const app = new cdk.App({
 
 test('context', () => {
   const target = new Context(app.node);
-  expect(target.stackPrefix).toEqual('StudyTest');
+  expect(target.stackPrefix).toEqual('AppTest');
 });

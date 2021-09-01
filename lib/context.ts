@@ -1,11 +1,12 @@
+import * as cdk from '@aws-cdk/core';
 import '../lib/string';
 
 export class Context {
   constructor(private self: { tryGetContext: (key: string) => any }) {
   }
 
-  get name(): string {
-    return this.self.tryGetContext('name');
+  get appName(): string {
+    return this.self.tryGetContext('appName');
   }
 
   get env(): string {
@@ -21,10 +22,14 @@ export class Context {
   }
 
   get stackPrefix(): string {
-    return this.name.upperCamelCase() + this.env.upperCamelCase();
+    return this.appName.upperCamelCase() + this.env.upperCamelCase();
   }
 
   get subDomain(): string {
-    return `${this.name}.${this.domain}`;
+    return `${this.appName}.${this.domain}`;
   }
+}
+
+export interface StackProps extends cdk.StackProps {
+  context: Context;
 }
